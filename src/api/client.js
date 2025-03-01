@@ -1,10 +1,10 @@
 import axios from "axios";
 
 const client = axios.create({
-    // ! change this if you are not using Laravel Herd
-	baseURL: "https://events-backend.test/api",
+	baseURL: "https://events-backend.test",
 	headers: {
-		"Content-Type": "application/json",
+        "Content-Type": "application/json",
+        Accept: "application/json",
     },
     withCredentials: true,
 });
