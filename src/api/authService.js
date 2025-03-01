@@ -22,3 +22,15 @@ export const getUser = async () => {
 		throw error;
 	}
 };
+
+export const register = async (name, email, password) => {
+	try {
+		await client.get("/sanctum/csrf-cookie");
+
+		const response = await client.post(`${prefix}/register`, { name, email, password });
+
+		return response.data;
+	} catch (error) {
+		return error.response?.data?.message || "Registration failed";
+	}
+};
