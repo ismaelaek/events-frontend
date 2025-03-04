@@ -45,7 +45,7 @@ const EventCard = ({ event }) => {
 			<Button
 				variant="primary"
 				className="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition-colors duration-300">
-				Join Event
+				{ event.is_private ? "Request Join" : "Join Event" }
 			</Button>
 		</Card>
 	);

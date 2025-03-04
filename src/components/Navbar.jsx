@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 import { FaUser, FaHome, FaPlus, FaPowerOff } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
+	const navigate = useNavigate();
 	const handleLogOut = () => {
 		localStorage.removeItem("auth_token");
 		navigate("/login");

@@ -4,13 +4,13 @@ import { getEvents } from "@/store/eventsSlice";
 
 const useEvents = () => {
     const dispatch = useDispatch();
-    const { events, loading, error, pagination } = useSelector((state) => state.events);
+    const { events, userEvents, organized, loading, error, pagination } = useSelector((state) => state.events);
 
     useEffect(() => {
         dispatch(getEvents());
     }, [dispatch]);
 
-    return { events, loading, error, pagination };
+    return { events, userEvents, organized, loading, error, pagination };
 };
 
 export default useEvents;
