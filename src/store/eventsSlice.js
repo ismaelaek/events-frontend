@@ -1,11 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import client from "@/api/client";
+const token = localStorage.getItem("auth_token"); 
 
 export const getEvents = createAsyncThunk(
     "events/getEvents",
     async (filters = {}, { rejectWithValue }) => {
         try {
-            const token = localStorage.getItem("auth_token"); 
             const response = await client.get("/api/events", {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -24,8 +24,24 @@ export const getOrganizedEvents = createAsyncThunk(
     "events/getOrganizedEvents",
     async (_, { rejectWithValue }) => {
         try {
-            const token = localStorage.getItem("auth_token");
             const response = await client.get("/api/events/organized", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            return response.data.data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || "Failed to fetch user events");
+        }
+    }
+)
+
+export const getJoinedEvents = createAsyncThunk(
+    "events/getJoinedEvents",
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await client.get("/api/events/joined-events", {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -42,7 +58,7 @@ const eventsSlice = createSlice({
     name: "events",
     initialState: {
         events: [],
-        userEvents: [],
+        joined: [],
         organized : [],
         status: null,
         error: null,
@@ -70,6 +86,18 @@ const eventsSlice = createSlice({
                 state.organized = payload;
             })
             .addCase(getOrganizedEvents.rejected, (state, { payload }) => {
+                state.status = "failed";
+                state.error = payload;
+            })
+            .addCase(getJoinedEvents.pending, (state) => {
+                state.status = "loading";
+                state.error = null;
+            })
+            .addCase(getJoinedEvents.fulfilled, (state, { payload }) => {
+                state.status = "success";
+                state.joined = payload;
+            })
+            .addCase(getJoinedEvents.rejected, (state, { payload }) => {
                 state.status = "failed";
                 state.error = payload;
             });

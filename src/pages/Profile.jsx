@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { getOrganizedEvents } from "@/store/eventsSlice";
+import { getOrganizedEvents, getJoinedEvents } from "@/store/eventsSlice";
 import useEvents from "@/hooks/useEvents";
 import EventCard from "@/components/EventCard";
 import { Link } from "react-router-dom";
@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 const Profile = () => {
 	const [user, setUser] = useState(null);
 	const dispatch = useDispatch();
-	const { userEvents, organized, loading, error } = useEvents();
+	const { joined, organized, loading, error } = useEvents();
 
 	useEffect(() => {
 		const storedUser = localStorage.getItem("user");
@@ -16,6 +16,7 @@ const Profile = () => {
 			setUser(JSON.parse(storedUser));
 		}
 		dispatch(getOrganizedEvents());
+		dispatch(getJoinedEvents());
 	}, []);
 
 	return (
@@ -50,8 +51,8 @@ const Profile = () => {
 				<h1 className="text-2xl font-bold text-center">Joined events</h1>
 				<div className="w-full py-4">
 					<div className="mt-4 py-3 px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-						{userEvents.length > 0 ? (
-							userEvents.map((event) => {
+						{joined.length > 0 ? (
+							joined.map((event) => {
 								return <EventCard key={event.id} event={event} />;
 							})
 						) : (
