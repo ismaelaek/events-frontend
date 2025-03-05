@@ -1,7 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { getEvent } from "@/store/eventsSlice";
+import { joinEvent, leaveEvent } from "@/store/eventParticipantsSlice";
 import useEvents from "@/hooks/useEvents";
 import {
 	FaCalendarAlt,
@@ -12,17 +13,50 @@ import {
 } from "react-icons/fa";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 const EventShow = () => {
 	const dispatch = useDispatch();
 	const { slug } = useParams();
-	const { event, status, error } = useEvents();
+	const { event, joined, error } = useEvents();
+	const [isJoined, setIsJoined] = useState(false);
 
 	useEffect(() => {
 		if (slug) {
 			dispatch(getEvent(slug));
 		}
 	}, [slug, dispatch]);
+
+	useEffect(() => {
+		if (event) {
+			setIsJoined(joined?.some((e) => e.id === event.id));
+		}
+	}, [event, joined]);
+
+    useEffect(() => {
+        toast.success('Hello world')
+    }, [])
+
+	const handleJoinLeave = async () => {
+		if (!event) return;
+
+		setIsJoined((prev) => !prev);
+
+		try {
+			if (isJoined) {
+				await dispatch(leaveEvent(event.id)).unwrap();
+				toast.success("You have left the event.");
+			} else {
+				await dispatch(joinEvent(event.id)).unwrap();
+				toast.success(
+					event.is_private ? "Join request sent!" : "Successfully joined!"
+				);
+			}
+		} catch (err) {
+			toast.error("Something went wrong. Try again.");
+			setIsJoined((prev) => !prev);
+		}
+	};
 
 	if (error) return <p className="text-red-500 text-center">{error}</p>;
 	if (!event)
@@ -96,12 +130,19 @@ const EventShow = () => {
 					<p className="text-gray-600 leading-relaxed">{event?.description}</p>
 
 					<Button
-						className={`w-full py-3 mt-4 font-semibold rounded-lg ${
-							event?.is_private
+						onClick={handleJoinLeave}
+						className={`w-full py-3 mt-4 font-semibold rounded-lg transition-colors text-white ${
+							isJoined
 								? "bg-red-600 hover:bg-red-700"
+								: event?.is_private
+								? "bg-yellow-600 hover:bg-yellow-700"
 								: "bg-blue-600 hover:bg-blue-700"
-						} text-white transition-colors`}>
-						{event?.is_private ? "Request to Join" : "Join Event"}
+						}`}>
+						{isJoined
+							? "Leave Event"
+							: event?.is_private
+							? "Request to Join"
+							: "Join Event"}
 					</Button>
 				</div>
 			</Card>

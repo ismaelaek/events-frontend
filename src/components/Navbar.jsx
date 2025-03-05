@@ -13,7 +13,7 @@ const Navbar = () => {
 			<div className="text-xl font-bold">
 				<Link to="/" className="flex items-center gap-2">
 					<FaHome />
-					<span>Event Manager</span>
+					<span>Events</span>
 				</Link>
 			</div>
 			<div className="flex gap-6 items-center">

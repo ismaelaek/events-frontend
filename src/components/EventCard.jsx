@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { Card } from "./ui/card";
-import { Button } from "./ui/button";
 import { FaCalendarAlt, FaMapMarkerAlt, FaUser } from "react-icons/fa";
 
 const EventCard = ({ event }) => {
@@ -44,13 +43,6 @@ const EventCard = ({ event }) => {
 					</p>
 				</div>
 			</div>
-
-			<Button
-				variant="primary"
-				className="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition-colors duration-300"
-			>
-				{event.is_private ? "Request Join" : "Join Event"}
-			</Button>
 		</Card>
 	);
 };
