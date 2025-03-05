@@ -16,7 +16,7 @@ const Register = () => {
 
 	useEffect(() => {
 		if (localStorage.getItem("auth_token")) {
-			// navigate("/");
+			navigate("/");
 		}
 	}, [navigate]);
 
@@ -31,9 +31,11 @@ const Register = () => {
 
 		try {
 			const response = await register(name, email, password);
-            if (response.token) {
-                localStorage.setItem("auth_token", response.token);
-                navigate("/");
+			if (response.token) {
+				localStorage.setItem("auth_token", response.token);
+				navigate("/"); 
+			} else {
+				setError("Registration failed. Please try again.");
 			}
 		} catch (err) {
 			setError("Registration failed. Please try again.");
