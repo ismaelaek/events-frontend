@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 const Profile = () => {
 	const [user, setUser] = useState(null);
 	const dispatch = useDispatch();
-	const { joined, organized, loading, error } = useEvents();
+	const { joined, organized, status, error } = useEvents();
 
 	useEffect(() => {
 		const storedUser = localStorage.getItem("user");
