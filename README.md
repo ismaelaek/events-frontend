@@ -1,8 +1,25 @@
-# React + Vite
+# Events Managment - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## installation 
 
-Currently, two official plugins are available:
+```shell
+git clone https://github.com/ismaelaek/events-frontend.git
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+cd events-frontend
+```
+if you are not using Laravel Herd, make sure to change `baseURL` in `src\api\client.js`.
+
+### install reqs
+```shell
+npm install 
+```
+
+### run app
+
+```shell
+npm run dev
+```
+
+## notes 
+- the application is not completly done and contains some issues.
+- login with `admin@gexample.com` and `password`.
