@@ -96,6 +96,25 @@ export const deleteEvent = createAsyncThunk(
 	}
 );
 
+export const createEvent = createAsyncThunk(
+	"events/createEvent",
+	async (formData, { rejectWithValue }) => {
+		try {
+			const response = await client.post("/api/events/create", formData, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
+
+			return response.data.data;
+		} catch (error) {
+			return rejectWithValue(
+				error.response?.data?.message || "Failed to create event"
+			);
+		}
+	}
+);
+
 const eventsSlice = createSlice({
 	name: "events",
 	initialState: {
@@ -164,6 +183,18 @@ const eventsSlice = createSlice({
 				state.status = "success";
 			})
 			.addCase(deleteEvent.rejected, (state, { payload }) => {
+				state.status = "failed";
+				state.error = payload;
+			})
+			.addCase(createEvent.pending, (state) => {
+				state.status = "loading";
+				state.error = null;
+			})
+			.addCase(createEvent.fulfilled, (state, { payload }) => {
+				state.status = "success";
+				state.events.push(payload);
+			})
+			.addCase(createEvent.rejected, (state, { payload }) => {
 				state.status = "failed";
 				state.error = payload;
 			});

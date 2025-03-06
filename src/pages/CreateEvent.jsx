@@ -4,8 +4,17 @@ import { Label } from "@radix-ui/react-label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
+import { createEvent } from "@/store/eventsSlice";
+import { useDispatch } from "react-redux";
+import useEvents from "@/hooks/useEvents";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner"
+
 
 const CreateEvent = () => {
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+	const { status, error } = useEvents();
 	const [formData, setFormData] = useState({
 		name: "",
 		description: "",
@@ -26,7 +35,12 @@ const CreateEvent = () => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		console.log(formData);
+		try {
+			dispatch(createEvent(formData))
+		} catch (e) {
+			toast('something wentt wront, please try again!')
+		}
+		
 	};
 
 	return (
@@ -44,7 +58,6 @@ const CreateEvent = () => {
 							<Input
 								type="text"
 								name="name"
-								value={formData.name}
 								onChange={handleChange}
 								className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
 							/>
@@ -56,7 +69,6 @@ const CreateEvent = () => {
 							<Input
 								type="text"
 								name="location"
-								value={formData.location}
 								onChange={handleChange}
 								className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
 							/>
@@ -71,7 +83,6 @@ const CreateEvent = () => {
 							<Input
 								type="date"
 								name="start_date"
-								value={formData.start_date}
 								onChange={handleChange}
 								className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
 							/>
@@ -83,7 +94,6 @@ const CreateEvent = () => {
 							<Input
 								type="date"
 								name="end_date"
-								value={formData.end_date}
 								onChange={handleChange}
 								className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
 							/>
@@ -98,7 +108,6 @@ const CreateEvent = () => {
 							<Input
 								type="number"
 								name="max_participants"
-								value={formData.max_participants}
 								onChange={handleChange}
 								className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
 							/>
