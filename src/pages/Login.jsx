@@ -5,8 +5,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { useDispatch } from "react-redux";
+import { setUser, setToken } from "@/store/authSlice";
 
 const Login = () => {
+	const dispatch = useDispatch();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState(null);
@@ -25,7 +28,8 @@ const Login = () => {
 			const response = await login(email, password);
 			if (response.token) {
 				localStorage.setItem("auth_token", response.token);
-				localStorage.setItem("user", JSON.stringify(response.user));
+				dispatch(setUser(response.user));
+				dispatch(setToken(response.token));
 				navigate("/");
 			}
 		} catch (err) {

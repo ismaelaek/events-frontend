@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getEvent } from "@/store/eventsSlice";
 import { joinEvent, leaveEvent } from "@/store/eventParticipantsSlice";
 import useEvents from "@/hooks/useEvents";
+import DeleteEventButton from "@/components/DeleteEventButton";
 import {
 	FaCalendarAlt,
 	FaMapMarkerAlt,
@@ -20,6 +21,7 @@ const EventShow = () => {
 	const { slug } = useParams();
 	const { event, joined, error } = useEvents();
 	const [isJoined, setIsJoined] = useState(false);
+	const { user } = useSelector((state) => state.auth);
 
 	useEffect(() => {
 		if (slug) {
@@ -32,10 +34,6 @@ const EventShow = () => {
 			setIsJoined(joined?.some((e) => e.id === event.id));
 		}
 	}, [event, joined]);
-
-    useEffect(() => {
-        toast.success('Hello world')
-    }, [])
 
 	const handleJoinLeave = async () => {
 		if (!event) return;
@@ -129,21 +127,27 @@ const EventShow = () => {
 
 					<p className="text-gray-600 leading-relaxed">{event?.description}</p>
 
-					<Button
-						onClick={handleJoinLeave}
-						className={`w-full py-3 mt-4 font-semibold rounded-lg transition-colors text-white ${
-							isJoined
-								? "bg-red-600 hover:bg-red-700"
+					{user?.id === event?.user_id ? (
+						<div className="flex justify-end">
+							<DeleteEventButton eventId={event?.id} />
+						</div>
+					) : (
+						<Button
+							onClick={handleJoinLeave}
+							className={`w-full py-3 mt-4 font-semibold rounded-lg transition-colors text-white ${
+								isJoined
+									? "bg-red-600 hover:bg-red-700"
+									: event?.is_private
+									? "bg-yellow-600 hover:bg-yellow-700"
+									: "bg-blue-600 hover:bg-blue-700"
+							}`}>
+							{isJoined
+								? "Leave Event"
 								: event?.is_private
-								? "bg-yellow-600 hover:bg-yellow-700"
-								: "bg-blue-600 hover:bg-blue-700"
-						}`}>
-						{isJoined
-							? "Leave Event"
-							: event?.is_private
-							? "Request to Join"
-							: "Join Event"}
-					</Button>
+								? "Request to Join"
+								: "Join Event"}
+						</Button>
+					)}
 				</div>
 			</Card>
 		</div>

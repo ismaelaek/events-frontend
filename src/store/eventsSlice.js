@@ -30,7 +30,7 @@ export const getOrganizedEvents = createAsyncThunk(
 				headers: {
 					Authorization: `Bearer ${token}`,
 				},
-            });
+			});
 			return response.data.data;
 		} catch (error) {
 			return rejectWithValue(
@@ -79,6 +79,22 @@ export const getEvent = createAsyncThunk(
 	}
 );
 
+export const deleteEvent = createAsyncThunk(
+	"events/deleteEvent",
+	async (eventId, { rejectWithValue }) => {
+		try {
+			await client.delete(`/api/events/${eventId}`, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
+		} catch (error) {
+			return rejectWithValue(
+				error.response?.data?.message || "Failed to delete event"
+			);
+		}
+	}
+);
 
 const eventsSlice = createSlice({
 	name: "events",
@@ -137,6 +153,17 @@ const eventsSlice = createSlice({
 				state.event = payload;
 			})
 			.addCase(getEvent.rejected, (state, { payload }) => {
+				state.status = "failed";
+				state.error = payload;
+			})
+			.addCase(deleteEvent.pending, (state) => {
+				state.status = "loading";
+				state.error = null;
+			})
+			.addCase(deleteEvent.fulfilled, (state) => {
+				state.status = "success";
+			})
+			.addCase(deleteEvent.rejected, (state, { payload }) => {
 				state.status = "failed";
 				state.error = payload;
 			});
